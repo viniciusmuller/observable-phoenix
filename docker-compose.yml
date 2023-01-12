@@ -62,7 +62,7 @@ services:
     command: '-config.file=/etc/loki/loki-config.yml'
 
   otel-collector:
-    image: otel/opentelemetry-collector
+    image: otel/opentelemetry-collector-contrib
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml

@@ -1,7 +1,27 @@
 apiVersion: 1
 
 datasources:
-  - name: prometheus
+  - uid: loki
+    name: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: tempo
+          matcherRegex: '[tT][rR][aA][cC][eE][._-]?[iI][dD][=":]+([a-z0-9]+)'
+          name: traceID
+          url: '$${__value.raw}'
+
+  - uid: tempo
+    name: tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200/tempo
+
+  - uid: prometheus
+    name: prometheus
     type: prometheus
     access: proxy
-    url: http://prometheus:9090
+    url: http://prometheus:9090/prometheus

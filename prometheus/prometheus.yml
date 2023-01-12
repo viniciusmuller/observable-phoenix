@@ -19,24 +19,3 @@ rule_files:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
-  - job_name: 'app-vnext-prod'
-    scheme: https
-    basic_auth:
-      username: $TSQ_METRICS_USER
-      password: $TSQ_METRICS_PASSWORD
-    static_configs:
-      - targets: ['app.tradesquash.com']
-
-  - job_name: 'app-vnext-hom'
-    basic_auth:
-      username: $TSQ_METRICS_USER
-      password: $TSQ_METRICS_PASSWORD
-    static_configs:
-      - targets: ['hom-app.tradesquash.com']
-
-  - job_name: 'app-vnext-local'
-    basic_auth:
-      username: $TSQ_METRICS_USER
-      password: $TSQ_METRICS_PASSWORD
-    static_configs:
-      - targets: ['localhost:4000']
