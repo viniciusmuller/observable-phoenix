@@ -8,6 +8,7 @@ defmodule ObservableTodolist.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      ObservableTodolist.PromEx,
       # Start the Telemetry supervisor
       ObservableTodolistWeb.Telemetry,
       # Start the Ecto repository
