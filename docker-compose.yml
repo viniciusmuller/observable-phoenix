@@ -1,0 +1,77 @@
+version: '3.8'
+
+volumes:
+  prometheus-data: {}
+  grafana-data: {}
+  tempo-data: {}
+  loki-index: {}
+  loki-chunks: {}
+
+services:
+  nginx:
+    image: nginx:stable
+    container_name: nginx
+    restart: unless-stopped
+    depends_on:
+      - tempo
+      - loki
+      - prometheus
+    ports:
+      - 5000:5000
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+
+  prometheus:
+    image: prom/prometheus:v2.37.5
+    user: root
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-data:/prometheus
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.external-url=/prometheus/'
+      - '--web.route-prefix=/prometheus/'
+
+  grafana:
+    user: root
+    restart: unless-stopped
+    image: grafana/grafana-oss:8.2.0
+    volumes:
+      - ./grafana:/etc/grafana
+      - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+
+  tempo:
+    image: grafana/tempo:1.4.1
+    restart: unless-stopped
+    command: [ "-config.file=/etc/tempo/tempo.yaml" ]
+    volumes:
+      - ./tempo/tempo.yaml:/etc/tempo/tempo.yaml
+      - tempo-data:/tmp/tempo
+
+  loki:
+    image: grafana/loki:2.7.1
+    restart: unless-stopped
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/loki-config.yml
+      - loki-index:/loki-index
+      - loki-chunks:/loki-chunks
+    command: '-config.file=/etc/loki/loki-config.yml'
+
+  otel-collector:
+    image: otel/opentelemetry-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      # - "1888:1888"   # pprof extension
+      # - "8888:8888"   # Prometheus metrics exposed by the collector
+      # - "8889:8889"   # Prometheus exporter metrics
+      # - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP http receiver
+      # - "55679:55679" # zpages extension
+

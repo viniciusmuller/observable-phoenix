@@ -1,0 +1,41 @@
+extensions:
+  basicauth/traces:
+    client_auth:
+      username: "${TRACES_USER_ID}"
+      password: "${TOKEN}"
+  health_check:
+  pprof:
+  zpages:
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+
+exporters:
+  loki:
+    endpoint: "http://loki:3100/loki/api/v1/push"
+  otlp/tempo:
+    endpoint: "http://tempo:3200/tempo"
+    auth:
+      authenticator: basicauth/traces
+
+service:
+  extensions: [health_check, pprof, zpages, basicauth/traces]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp, loki, otlp/tempo]
