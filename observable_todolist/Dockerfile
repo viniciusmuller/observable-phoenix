@@ -51,6 +51,8 @@ COPY lib lib
 
 COPY assets assets
 
+COPY entrypoint.sh entrypoint.sh
+
 # compile assets
 RUN mix assets.deploy
 
@@ -67,7 +69,7 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales postgresql-client \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -85,7 +87,8 @@ ENV MIX_ENV="prod"
 
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/observable_todolist ./
+COPY --from=builder --chown=nobody:root /app/entrypoint.sh ./
 
 USER nobody
 
-CMD ["/app/bin/server"]
+CMD ["/app/entrypoint.sh"]

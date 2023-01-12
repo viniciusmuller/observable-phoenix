@@ -19,3 +19,15 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+config :observable_todolist, ObservableTodolist.PromEx,
+  disabled: false,
+  manual_metrics_start_delay: :no_delay,
+  drop_metrics_groups: [],
+  grafana: [
+    host: "http://grafana:3000",
+    username: "admin",
+    password: "admin",
+    upload_dashboards_on_start: true
+  ],
+  metrics_server: :disabled

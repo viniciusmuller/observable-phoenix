@@ -6,6 +6,7 @@ volumes:
   tempo-data: {}
   loki-index: {}
   loki-chunks: {}
+  postgres-data: {}
 
 services:
   nginx:
@@ -24,7 +25,7 @@ services:
 
   prometheus:
     image: prom/prometheus:v2.37.5
-    user: root
+    container_name: prometheus
     restart: unless-stopped
     volumes:
       - ./prometheus:/etc/prometheus
@@ -35,9 +36,9 @@ services:
       - '--web.route-prefix=/prometheus/'
 
   grafana:
-    user: root
     restart: unless-stopped
     image: grafana/grafana-oss:8.2.0
+    container_name: grafana
     volumes:
       - ./grafana:/etc/grafana
       - grafana-data:/var/lib/grafana
@@ -46,6 +47,7 @@ services:
 
   tempo:
     image: grafana/tempo:1.4.1
+    container_name: tempo
     restart: unless-stopped
     command: [ "-config.file=/etc/tempo/tempo.yaml" ]
     volumes:
@@ -54,6 +56,7 @@ services:
 
   loki:
     image: grafana/loki:2.7.1
+    container_name: loki
     restart: unless-stopped
     volumes:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
@@ -63,6 +66,7 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib
+    container_name: otel-collector
     command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
       - ./otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
@@ -75,3 +79,27 @@ services:
       - "4318:4318"   # OTLP http receiver
       # - "55679:55679" # zpages extension
 
+  observable-todolist:
+    build: ./observable_todolist
+    container_name: observable-todolist
+    depends_on:
+      - postgres
+    ports: 
+      - "4001:4000"
+    environment:
+      - PGUSER=postgres
+      - PGPASSWORD=postgres
+      - PGDATABASE=observable_todolist
+      - PGHOST=postgres
+      - PGPORT=5432
+      - DATABASE_URL=ecto://postgres:postgres@postgres:5432/observable_todolist
+      - SECRET_KEY_BASE=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
