@@ -7,6 +7,9 @@ defmodule ObservableTodolist.Application do
 
   @impl true
   def start(_type, _args) do
+    OpentelemetryPhoenix.setup()
+    OpentelemetryEcto.setup([:observable_todolist, :repo])
+
     children = [
       ObservableTodolist.PromEx,
       # Start the Telemetry supervisor

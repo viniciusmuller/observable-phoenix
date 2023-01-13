@@ -13,10 +13,14 @@ processors:
   batch:
 
 exporters:
+  logging:
+    loglevel: debug
   loki:
     endpoint: "http://loki:3100/loki/api/v1/push"
   otlp/tempo:
-    endpoint: "http://tempo:3200/tempo"
+    endpoint: "tempo:4317"
+    tls:
+      insecure: true
 
 service:
   extensions: [health_check, pprof, zpages]

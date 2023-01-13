@@ -1,11 +1,19 @@
 # metrics_generator_enabled: true
 #
 http_api_prefix: "/tempo"
+search_enabled: true
+
+# TODO: current querying traces from grafana is failing with a weird "Querier"
+# error. Either it's a real issue or the it is because tempo isn't actually
+# receiving any metrics
 
 server:
   http_listen_port: 3200
 
 distributor:
+  search_tags_deny_list:
+    - "instance"
+    - "version"
   receivers:                           # this configuration will listen on all ports and protocols that tempo is capable of.
     otlp:
       protocols:
@@ -40,3 +48,5 @@ storage:
       max_workers: 100                 # worker pool determines the number of parallel requests to the object store backend
       queue_depth: 10000
 
+overrides:
+  per_tenant_override_config: /etc/overrides.yaml

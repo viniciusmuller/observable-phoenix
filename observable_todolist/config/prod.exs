@@ -31,3 +31,13 @@ config :observable_todolist, ObservableTodolist.PromEx,
     upload_dashboards_on_start: true
   ],
   metrics_server: :disabled
+
+config :opentelemetry, :resource, service: %{name: "observable-todolist"}
+
+config :opentelemetry, :processors,
+  otel_batch_processor: %{
+    exporter: {
+      :opentelemetry_exporter,
+      %{endpoints: ["http://otel-collector:4318"]}
+    }
+  }

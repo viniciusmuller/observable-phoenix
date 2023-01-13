@@ -52,12 +52,14 @@ services:
     command: [ "-config.file=/etc/tempo/tempo.yaml" ]
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo/tempo.yaml
+      - ./tempo/overrides.yaml:/etc/overrides.yaml
       - tempo-data:/tmp/tempo
 
   loki:
     image: grafana/loki:2.7.1
     container_name: loki
     restart: unless-stopped
+    user: root
     volumes:
       - ./loki/loki-config.yml:/etc/loki/loki-config.yml
       - loki-index:/loki-index

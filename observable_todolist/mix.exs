@@ -51,7 +51,12 @@ defmodule ObservableTodolist.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5", override: true},
-      {:prom_ex, "~> 1.7.0"}
+      {:prom_ex, "~> 1.7.0"},
+      {:opentelemetry_api_experimental, github: "open-telemetry/opentelemetry-erlang", sparse: "apps/opentelemetry_api_experimental", override: true},
+      {:opentelemetry_experimental, github: "open-telemetry/opentelemetry-erlang", sparse: "apps/opentelemetry_experimental", override: true},
+      {:opentelemetry_exporter, github: "open-telemetry/opentelemetry-erlang", sparse: "apps/opentelemetry_exporter", override: true},
+      {:opentelemetry_phoenix, "~> 1.0.0"},
+      {:opentelemetry_ecto, "~> 1.1.0"}
     ]
   end
 

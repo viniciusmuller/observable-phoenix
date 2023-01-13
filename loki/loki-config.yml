@@ -1,5 +1,7 @@
 auth_enabled: false
 
+# TODO: currently loki is not receiving logs, probably due to a otel-collector
+# misconfiguration
 server:
   http_listen_port: 3100
   grpc_listen_port: 9096
