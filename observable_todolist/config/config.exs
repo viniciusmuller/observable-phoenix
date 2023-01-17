@@ -51,6 +51,13 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
+config :logger, :logger_fluentd_backend,
+  serializer: :msgpack,
+  tag: "observable-todolist",
+  level: :debug,
+  host: "otel-collector",
+  port: 24224
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

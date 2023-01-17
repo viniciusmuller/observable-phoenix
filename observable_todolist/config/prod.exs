@@ -15,7 +15,9 @@ config :observable_todolist, ObservableTodolistWeb.Endpoint, cache_static_manife
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: ObservableTodolist.Finch
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, 
+  backends: [:console, LoggerFluentdBackend.Logger],
+  level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.

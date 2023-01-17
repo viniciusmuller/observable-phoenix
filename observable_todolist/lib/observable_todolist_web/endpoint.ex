@@ -45,7 +45,6 @@ defmodule ObservableTodolistWeb.Endpoint do
 
   defp set_logger_trace_id(conn, _opts) do 
     span_ctx = OpenTelemetry.Tracer.current_span_ctx()
-    IO.inspect(span_ctx)
 
     if span_ctx != :undefined do 
       Logger.metadata(trace_id: OpenTelemetry.Span.hex_trace_id(span_ctx))

@@ -8,6 +8,20 @@ receivers:
     protocols:
       grpc:
       http:
+  fluentforward:
+    endpoint: 0.0.0.0:24224
+  # TODO: use promtail receiver when it gets to upstream
+  # promtail:
+  #  config:
+  #   positions:
+  #     filename: /tmp/positions.yaml
+  #     sync_period: 10s
+  #   scrape_configs:
+  #     - job_name: push
+  #       loki_push_api:
+  #         server:
+  #           http_listen_port: 4318
+  #                 # Data sources: traces, metrics, logs
 
 processors:
   batch:
@@ -34,6 +48,6 @@ service:
     #   processors: [batch]
     #   exporters: [otlp]
     logs:
-      receivers: [otlp]
+      receivers: [fluentforward]
       processors: [batch]
       exporters: [loki]
