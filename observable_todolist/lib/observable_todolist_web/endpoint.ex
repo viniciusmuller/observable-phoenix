@@ -36,11 +36,23 @@ defmodule ObservableTodolistWeb.Endpoint do
     param_key: "request_logger",
     cookie_key: "request_logger"
 
-
   plug PromEx.Plug, prom_ex_module: ObservableTodolist.PromEx
 
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+
+  plug :set_logger_trace_id
+
+  defp set_logger_trace_id(conn, _opts) do 
+    span_ctx = OpenTelemetry.Tracer.current_span_ctx()
+    IO.inspect(span_ctx)
+
+    if span_ctx != :undefined do 
+      Logger.metadata(trace_id: OpenTelemetry.Span.hex_trace_id(span_ctx))
+    end
+
+    conn
+  end
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
