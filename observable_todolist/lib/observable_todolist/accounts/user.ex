@@ -5,6 +5,7 @@ defmodule ObservableTodolist.Accounts.User do
   schema "users" do
     field :age, :integer
     field :name, :string
+    field :password, :string, virtual: true
 
     timestamps()
   end

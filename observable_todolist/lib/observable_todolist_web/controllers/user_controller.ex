@@ -32,6 +32,8 @@ defmodule ObservableTodolistWeb.UserController do
   end
 
   def edit(conn, %{"id" => id}) do
+    raise "very unexpected error"
+
     user = Accounts.get_user!(id)
     changeset = Accounts.change_user(user)
     render(conn, :edit, user: user, changeset: changeset)

@@ -39,7 +39,13 @@ defmodule ObservableTodolistWeb.Endpoint do
   plug PromEx.Plug, prom_ex_module: ObservableTodolist.PromEx
 
   plug Plug.RequestId
-  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
+
+  plug Plug.Telemetry,
+    event_prefix: [:phoenix, :endpoint],
+    log: {__MODULE__, :log_level, []}
+
+   # Prevent Plug.Telemetry from logging, now LoggerExporter.Loggers.Plug is used
+  def log_level(_), do: false
 
   plug :set_logger_trace_id
 
@@ -57,6 +63,8 @@ defmodule ObservableTodolistWeb.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
+
+  plug LoggerExporter.Loggers.Plug
 
   plug Plug.MethodOverride
   plug Plug.Head

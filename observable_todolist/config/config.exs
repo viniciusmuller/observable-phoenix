@@ -51,12 +51,12 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
-config :logger, :logger_fluentd_backend,
-  serializer: :msgpack,
-  tag: "observable-todolist",
-  level: :debug,
-  host: "otel-collector",
-  port: 24224
+config :logger, LoggerExporter,
+  host: "http://nginx:3100",
+  app_name: "observable-todolist",
+  environment_name: Mix.env(),
+  http_auth: {:basic, "admin", "admin"},
+  metadata: [:request_id, :trace_id]
 
 # Configures Elixir's Logger
 config :logger, :console,

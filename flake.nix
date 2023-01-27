@@ -14,6 +14,7 @@
       {
         devShell = with pkgs; mkShell {
           buildInputs = [
+            docker-compose
             elixir_1_14
             elixir_ls
             inotify-tools

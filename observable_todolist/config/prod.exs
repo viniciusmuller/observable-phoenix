@@ -16,8 +16,11 @@ config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: ObservableTodoli
 
 # Do not print debug messages in production
 config :logger, 
-  backends: [:console, LoggerFluentdBackend.Logger],
+  backends: [:console, LoggerExporter.Backend],
   level: :info
+
+# TODO: figure out how to redact certain fields that are logged inside "params"
+# config :phoenix, :filter_parameters, ["password", "secret"]
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
@@ -27,7 +30,7 @@ config :observable_todolist, ObservableTodolist.PromEx,
   manual_metrics_start_delay: :no_delay,
   drop_metrics_groups: [],
   grafana: [
-    host: "http://grafana:3000",
+    host: "http://nginx:3000",
     username: "admin",
     password: "admin",
     upload_dashboards_on_start: true
@@ -40,6 +43,6 @@ config :opentelemetry, :processors,
   otel_batch_processor: %{
     exporter: {
       :opentelemetry_exporter,
-      %{endpoints: ["http://otel-collector:4318"]}
+      %{endpoints: ["http://nginx:4318"]}
     }
   }

@@ -56,7 +56,8 @@ defmodule ObservableTodolist.MixProject do
       {:opentelemetry_exporter, "~> 1.0"},
       {:opentelemetry_phoenix, "~> 1.0"},
       {:opentelemetry_ecto, "~> 1.0"},
-      {:logger_fluentd_backend, "~> 0.0.4"}
+      {:logger_exporter, "~> 0.3.0"},
+      # {:logger_fluentd_backend, "~> 0.0.4"}
     ]
   end
 

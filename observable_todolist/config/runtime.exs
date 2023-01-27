@@ -63,6 +63,12 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+
+  auth = Plug.BasicAuth.encode_basic_auth("admin", "admin")
+
+  config :opentelemetry_exporter,
+    otlp_headers: [{"Authorization", auth}]
+
   # ## SSL Support
   #
   # To get SSL working, you will need to add the `https` key

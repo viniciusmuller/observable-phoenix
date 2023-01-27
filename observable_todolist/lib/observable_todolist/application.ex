@@ -11,6 +11,8 @@ defmodule ObservableTodolist.Application do
     OpentelemetryEcto.setup([:observable_todolist, :repo])
 
     children = [
+      LoggerExporter,
+
       ObservableTodolist.PromEx,
       # Start the Telemetry supervisor
       ObservableTodolistWeb.Telemetry,
