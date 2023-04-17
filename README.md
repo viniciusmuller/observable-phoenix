@@ -11,6 +11,16 @@ This project showcases an observable Phoenix application using:
 It aims to provide a solid start point for adding observability to an
 existing/new Phoenix application.
 
+# Table of Contents
+
+- [Architecture](#architecture)
+- [Trying it out](#trying-it-out)
+  - [Up and Running](#up-and-running)
+  - [Interacting with the application](#interacting-with-the-application)
+  - [Checking Grafana](#checking-grafana)
+    - [Dashboards](#dashboards)
+    - [Exploring](#exploring)
+
 # Architecture
 ![Project's architecture](./.github/img/architecture.png)
 
